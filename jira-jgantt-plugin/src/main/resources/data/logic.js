@@ -37,6 +37,9 @@
 		var month = function(name) {
                         
                         var gantt_locale = readCookie("gantt-locale")
+                        if ((gantt_locale=="")||(gantt_locale==null)){ //English default
+                            return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(name) + 1;
+                        }
                         var language = gantt_locale.split("_")
                         if (language[0] == "en")
                             return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(name) + 1;
@@ -138,6 +141,7 @@
 				color = $(epic_element[0]).css("background-color");
 			}
 			var title = $(this).find('.ghx-summary').attr('title');
+                        var key = $(this).find('.ghx-key-link-project-key').text() + $(this).find('.ghx-key-link-issue-num').text()
 			var add = false;
 			var owner = $(extra[0]).text().replace(/FILTER_OUT/,'');
 			var start_date;
@@ -156,7 +160,9 @@
                         var end_date_time =""
                         
                         var gantt_date_format = readCookie("gantt-date-format")
-                        
+                        if ( (gantt_date_format == "") || (gantt_date_format == null) ) {
+                            gantt_date_format = "d/MMM/yy" //Standard Jira format by default
+                        }
                         var start_text = kk[0].split('/');
                         if (! array_equal(start_text, ['None']) && start_text.length == 3 ) {
                                 if ( (gantt_date_format == "dd/MM/yyyy" || gantt_date_format == "d/MM/yyyy" || gantt_date_format == "dd/M/yyyy" || gantt_date_format == "d/M/yyyy" ) && start_text[2].length == 4 ) {
@@ -342,11 +348,11 @@
 					data.push({id:owner, text:owner, owner:true, open: true});
 				}
 				//data.push({text:title, odd:odd, start_date:start_text, duration:duration, open:true, color:color, progress:progress, parent:owner}); 
-				data.push({text:title, start_date:start_text, duration:duration, open:true, color:color, progress:progress, parent:owner}); 
+				data.push({text:key + " - " + title, start_date:start_text, duration:duration, open:true, color:color, progress:progress, parent:owner}); 
 			}
 		});
 
-		gantt.config.row_height = 20;
+		gantt.config.row_height = 25;
 		gantt.config.readonly = true;
 		gantt.config.drag_links = false;
 		//gantt.config.drag_move = true;
@@ -400,15 +406,54 @@
 		//gantt.oData.scrollLeft = ((new Date() - gantt.startDate) / (24*60*60000) - 10) * gantt.dayInPixels;
 		gantt.showDate(yesterday);
 
-		$('<button style="position:absolute;top:1ex;left:1ex">X</button>')
-			.click(function(){
-				cleanup("g4n7t");
-			})
-			.appendTo('div.g4n7t');
 
-		$('<button style="position:absolute;top:1ex;left:18ex">N</button>')
+		$('<button style="position:absolute;top:1ex;left:17ex">[NOW]</button>')
 			.click(function(){
 				gantt.showDate(yesterday);
+			})
+			.appendTo('div.g4n7t');
+                        
+                var currFFZoom = 1;
+                var currIEZoom = 100;
+                $('<button style="position:absolute;top:1ex;left:7ex">[-]</button>')
+			.click(function(){
+				if (navigator.userAgent.search("Firefox")>-1){
+                                    var step = 0.02;
+                                    currFFZoom -= step;                 
+                                    $('html').css('MozTransform','scale(' + currFFZoom + ')');
+        
+                                } else {
+                                    var step = 2;
+                                    currIEZoom -= step;
+                                    $('html').css('zoom', ' ' + currIEZoom + '%');
+                                }
+                                $(window).trigger('resize');
+			})
+			.appendTo('div.g4n7t');
+                 $('<button style="position:absolute;top:1ex;left:12ex">[+]</button>')
+			.click(function(){
+				if (navigator.userAgent.search("Firefox")>-1){
+                                    var step = 0.02;
+                                    currFFZoom += step; 
+                                    $('html').css('MozTransform','scale(' + currFFZoom + ')');
+                                } else {
+                                    var step = 2;
+                                    currIEZoom += step;
+                                    $('html').css('zoom', ' ' + currIEZoom + '%');
+                                }
+                                $(window).trigger('resize');
+			})
+			.appendTo('div.g4n7t');
+                
+		$('<button style="position:absolute;top:1ex;left:1ex">[X]</button>')
+			.click(function(){
+				cleanup("g4n7t");
+                                if (navigator.userAgent.search("Firefox")>-1){
+                                    $('html').css('MozTransform','scale(1)');
+                                } else {
+                                    $('html').css('zoom', '100%');
+                                }
+                                $(window).trigger('resize');
 			})
 			.appendTo('div.g4n7t');
 
