@@ -352,11 +352,46 @@
 			}
 		});
 
-		gantt.config.row_height = 25;
-		gantt.config.readonly = true;
-		gantt.config.drag_links = false;
-		//gantt.config.drag_move = true;
-
+		gantt.config.row_height = 35;
+		gantt.config.readonly = false;
+		gantt.config.drag_links = true;
+		gantt.config.drag_move = true;
+                gantt.config.drag_progress = true;
+                
+                // default columns definition
+gantt.config.columns = [
+    {name:"text",       label:"",  width:"*", tree:true ,resize:true },
+    {name:"start_date", label:"Start date", align:"center" ,resize:true },
+     {name:"duration",   label:"Duration",   align:"center" ,resize:true }
+];
+//{name:"end_date",   label:"End date",   align:"center" ,resize:true },
+           gantt.config.grid_width = 350;
+           gantt.config.keep_grid_width = false; 
+           gantt.config.grid_resizer_attribute = "gridresizer";
+           gantt.config.autofit = false;           
+           gantt.config.scroll_size = 30;
+           gantt.config.details_on_dblclick = true;
+           gantt.config.drag_multiple = true;
+           gantt.config.autoscroll = true;  
+           gantt.config.drag_project = true;   
+           gantt.config.drag_resize = true;
+           gantt.config.horizontal_scroll_key = "altKey";
+           gantt.config.initial_scroll = true;
+           gantt.config.keyboard_navigation = true;
+           gantt.config.keyboard_navigation_cells = true;
+           gantt.config.multiselect = true;
+           gantt.config.scroll_on_click= true;
+           gantt.config.select_task  = true;
+           gantt.config.smart_rendering = true;
+           gantt.config.smart_scales = true;
+           gantt.config.touch_feedback = true;
+           gantt.config.buttons_left = ["gantt_save_btn","gantt_cancel_btn"]; 
+           gantt.config.undo_actions = {
+    update:"update",
+    remove:"remove", // remove an item from datastore
+    add:"add"
+};
+                
 		gantt.templates.scale_cell_class = function(date){
 			if (daysBetween(date, now) == 0) {
 				return 'gantt_today';
@@ -410,6 +445,11 @@
 		$('<button style="position:absolute;top:1ex;left:17ex">[NOW]</button>')
 			.click(function(){
 				gantt.showDate(yesterday);
+			})
+			.appendTo('div.g4n7t');
+                $('<button style="position:absolute;top:1ex;left:25ex">[PRINT]</button>')
+			.click(function(){
+				window.print();
 			})
 			.appendTo('div.g4n7t');
                         
