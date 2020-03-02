@@ -356,7 +356,7 @@
 		gantt.config.readonly = false;
 		gantt.config.drag_links = true;
 		gantt.config.drag_move = true;
-                gantt.config.drag_progress = true;
+                gantt.config.drag_progress = false;
                 
                 // default columns definition
 gantt.config.columns = [
@@ -370,7 +370,7 @@ gantt.config.columns = [
            gantt.config.grid_resizer_attribute = "gridresizer";
            gantt.config.autofit = false;           
            gantt.config.scroll_size = 30;
-           gantt.config.details_on_dblclick = true;
+           gantt.config.details_on_dblclick = false;
            gantt.config.drag_multiple = true;
            gantt.config.autoscroll = true;  
            gantt.config.drag_project = true;   
@@ -391,6 +391,21 @@ gantt.config.columns = [
     remove:"remove", // remove an item from datastore
     add:"add"
 };
+                
+                gantt.attachEvent("onTaskDblClick", function(id, e) {
+                    try  {
+                    var task = gantt.getTask(id);
+                    var text = task.text.split(" ")
+                    window.open(AJS.contextPath() + "/browse/"+text[0], "_blank");
+                    } catch ( e ) {}
+                        
+                });
+                
+                gantt.attachEvent("onAfterTaskDrag", function(id, mode, old_task){
+                    var task = gantt.getTask(id);
+                    alert(" [ALERT] In this version, the changes are NOT persistent!!");
+                    return true;
+                });
                 
 		gantt.templates.scale_cell_class = function(date){
 			if (daysBetween(date, now) == 0) {
