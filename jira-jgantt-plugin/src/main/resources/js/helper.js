@@ -13,13 +13,13 @@
 (function(a) {
     function set_date_format() {
          jQuery.ajax({
-            url: "/rest/api/2/application-properties?key=jira.lf.date.dmy",
+            url: AJS.contextPath() + "/rest/api/2/application-properties?key=jira.lf.date.dmy",
             type: "GET",
 
             contentType: 'application/json; charset=utf-8',
             success: function(json) {
                 //alert("OK: "+json.value);
-                document.cookie="gantt-date-format="+json.value+"; path=/";
+                document.cookie="gantt_date_format="+json.value+"; path=/"
             },
             error : function(jqXHR, textStatus, errorThrown) {
                 //alert("FATAL ERROR: No date-format found.");
@@ -32,13 +32,13 @@
 
     function set_locale() {
          jQuery.ajax({
-            url: "/rest/api/2/myself",
+            url: AJS.contextPath() + "/rest/api/2/myself",
             type: "GET",
 
             contentType: 'application/json; charset=utf-8',
             success: function(json) {
                 //alert("OK: "+json.locale);
-                document.cookie="gantt-locale="+json.locale+"; path=/";
+                document.cookie="gantt_locale="+json.locale+"; path=/";
             },
             error : function(jqXHR, textStatus, errorThrown) {
                 //alert("FATAL ERROR: No locale found.");

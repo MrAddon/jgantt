@@ -36,7 +36,7 @@
                         
 		var month = function(name) {
                         
-                        var gantt_locale = readCookie("gantt-locale")
+                        var gantt_locale = readCookie("gantt_locale")
                         if ((gantt_locale=="")||(gantt_locale==null)){ //English default
                             return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(name) + 1;
                         }
@@ -142,6 +142,9 @@
 			}
 			var title = $(this).find('.ghx-summary').attr('title');
                         var key = $(this).find('.ghx-key-link-project-key').text() + $(this).find('.ghx-key-link-issue-num').text()
+                        if (key == 0 ) {
+                                key = $(this).find('.js-key-link').text()
+                        }
 			var add = false;
 			var owner = $(extra[0]).text().replace(/FILTER_OUT/,'');
 			var start_date;
@@ -159,7 +162,7 @@
                         var start_date_time =""
                         var end_date_time =""
                         
-                        var gantt_date_format = readCookie("gantt-date-format")
+                        var gantt_date_format = readCookie("gantt_date_format")
                         if ( (gantt_date_format == "") || (gantt_date_format == null) ) {
                             gantt_date_format = "d/MMM/yy" //Standard Jira format by default
                         }
@@ -352,7 +355,7 @@
 			}
 		});
 
-		gantt.config.row_height = 35;
+		gantt.config.row_height = 30;
 		gantt.config.readonly = false;
 		gantt.config.drag_links = true;
 		gantt.config.drag_move = true;
@@ -464,7 +467,16 @@ gantt.config.columns = [
 			.appendTo('div.g4n7t');
                 $('<button style="position:absolute;top:1ex;left:25ex">[PRINT]</button>')
 			.click(function(){
-				window.print();
+                                var originalContents = document.body.innerHTML;
+                                window.document.getElementById("page").style.visibility = "hidden";
+                                window.document.getElementById("ghx-detail-view").style.visibility = "hidden";
+                                var divContents = window.document.getElementsByClassName("gantt_container")[0].innerHTML
+                                document.innerHTML = divContents;
+                                window.print();
+                                document.innerHTML = originalContents;
+                                window.document.getElementById("page").style.visibility = "visible";
+                                window.document.getElementById("ghx-detail-view").style.visibility = "visible";
+                                //window.print();
 			})
 			.appendTo('div.g4n7t');
                         
