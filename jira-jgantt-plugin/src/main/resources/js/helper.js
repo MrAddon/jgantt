@@ -61,7 +61,7 @@
             a(".jgantt-enabled").click(function() {
                 var a = document.createElement("script");
                 a.setAttribute("type", "text/javascript");
-                a.setAttribute("src", AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/stage.js?v=322");
+                a.setAttribute("src", AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/stage.js");
                 a.setAttribute("class", "g4nt7");
                 document.body.appendChild(a)
             });

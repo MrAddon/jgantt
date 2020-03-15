@@ -5,15 +5,25 @@
 			nodes[0].parentNode.removeChild(nodes[0]);
 		}
 	};
-	//setTimeout(function() {
 	Zepto(function($){
 
-		$('<div class="g4n7t" style="position:absolute;top:0;right:0;bottom:0;left:0;z-index:10;background-color:white">'+
-			'<div id="gantt_here" style="position:absolute;top:0;right:0;bottom:0;left:0"></div>'+
+		$('<div class="g4n7t" style="position:absolute;top:0;right:0;bottom:0;left:0;z-index:10;background-color:white">'+                
+                  '<form class="gantt_control">'+
+                  '<input type="radio" id="scale1" class="gantt_radio" name="scale" value="day">' +
+                  '<label for="scale1">Day scale</label>' +
+                  '<input type="radio" id="scale2" class="gantt_radio" name="scale" value="week">' +
+                  '<label for="scale2">Week scale</label>' +
+                  '<input type="radio" id="scale3" class="gantt_radio" name="scale" value="month" checked>' +
+                  '<label for="scale3">Month scale</label>' +
+                  '<input type="radio" id="scale4" class="gantt_radio" name="scale" value="quarter">' +
+                  '<label for="scale4">Quarter scale</label>' +
+                  '<input type="radio" id="scale5" class="gantt_radio" name="scale" value="year">' +
+                  '<label for="scale5">Year scale</label>' +
+                  '</form>' +
+                  '<div id="gantt_here" style="position:absolute;top:40px;right:0;bottom:0;left:0"></div>'+
 		  '</div>').appendTo('body');
 
-		//alert(VERSION);
-
+		
 		var pad = function(number, length) {
 			var str = '' + number;
 			while (str.length < length) {
@@ -355,6 +365,7 @@
 			}
 		});
 
+                
 		gantt.config.row_height = 30;
 		gantt.config.readonly = false;
 		gantt.config.drag_links = true;
@@ -362,39 +373,12 @@
                 gantt.config.drag_progress = false;
                 
                 // default columns definition
-gantt.config.columns = [
-    {name:"text",       label:"",  width:"*", tree:true ,resize:true },
-    {name:"start_date", label:"Start date", align:"center" ,resize:true },
-     {name:"duration",   label:"Duration",   align:"center" ,resize:true }
-];
-//{name:"end_date",   label:"End date",   align:"center" ,resize:true },
-           gantt.config.grid_width = 350;
-           gantt.config.keep_grid_width = false; 
-           gantt.config.grid_resizer_attribute = "gridresizer";
-           gantt.config.autofit = false;           
-           gantt.config.scroll_size = 30;
-           gantt.config.details_on_dblclick = false;
-           gantt.config.drag_multiple = true;
-           gantt.config.autoscroll = true;  
-           gantt.config.drag_project = true;   
-           gantt.config.drag_resize = true;
-           gantt.config.horizontal_scroll_key = "altKey";
-           gantt.config.initial_scroll = true;
-           gantt.config.keyboard_navigation = true;
-           gantt.config.keyboard_navigation_cells = true;
-           gantt.config.multiselect = true;
-           gantt.config.scroll_on_click= true;
-           gantt.config.select_task  = true;
-           gantt.config.smart_rendering = true;
-           gantt.config.smart_scales = true;
-           gantt.config.touch_feedback = true;
-           gantt.config.buttons_left = ["gantt_save_btn","gantt_cancel_btn"]; 
-           gantt.config.undo_actions = {
-    update:"update",
-    remove:"remove", // remove an item from datastore
-    add:"add"
-};
-                
+                gantt.config.columns = [
+                    {name:"text",       label:"",  width:"*", tree:true ,resize:true },
+                    {name:"start_date", label:"Start date", align:"center" ,resize:true },
+                    {name:"duration",   label:"Duration",   align:"center" ,resize:true }
+                ];
+                                
                 gantt.attachEvent("onTaskDblClick", function(id, e) {
                     try  {
                     var task = gantt.getTask(id);
@@ -410,62 +394,95 @@ gantt.config.columns = [
                     return true;
                 });
                 
-		gantt.templates.scale_cell_class = function(date){
-			if (daysBetween(date, now) == 0) {
-				return 'gantt_today';
+                //https://docs.dhtmlx.com/gantt/api__gantt_onscaleclick_event.html
+                              
+                var zoomConfig = {
+		levels: [
+			{
+				name:"day",
+				scale_height: 27,
+				min_column_width:80,
+				scales:[
+					{unit: "day", step: 1, format: "%d %M"}
+				]
+			},
+			{
+				name:"week",
+				scale_height: 50,
+				min_column_width:50,
+				scales:[
+					{unit: "week", step: 1, format: function (date) {
+						var dateToStr = gantt.date.date_to_str("%d %M");
+						var endDate = gantt.date.add(date, -6, "day");
+						var weekNum = gantt.date.date_to_str("%W")(date);
+						return "#" + weekNum + ", " + dateToStr(date) + " - " + dateToStr(endDate);
+					}},
+					{unit: "day", step: 1, format: "%j %D"}
+				]
+			},
+			{
+				name:"month",
+				scale_height: 50,
+				min_column_width:120,
+				scales:[
+					{unit: "month", format: "%F, %Y"},
+					{unit: "week", format: "Week #%W"}
+				]
+			},
+			{
+				name:"quarter",
+				height: 50,
+				min_column_width:90,
+				scales:[
+					{unit: "month", step: 1, format: "%M"},
+					{
+						unit: "quarter", step: 1, format: function (date) {
+							var dateToStr = gantt.date.date_to_str("%M");
+							var endDate = gantt.date.add(gantt.date.add(date, 3, "month"), -1, "day");
+							return dateToStr(date) + " - " + dateToStr(endDate);
+						}
+					}
+				]
+			},
+			{
+				name:"year",
+				scale_height: 50,
+				min_column_width: 40,
+				scales:[
+					{unit: "year", format: "%Y"}
+				]
 			}
-			if (date.getDay() == 0 || date.getDay() == 6) { 
-				return 'gantt_weekend';
-			}
-		};
-		gantt.templates.task_cell_class = function(item,date){
-			var result = [];
-			//if (item.odd) {
-			//	result.push('gantt_odd');
-			//}
-			//if (item.color == white || item.color == gray) {
-			//	return 'gantt_person';
-			//}
-			if (date.getDay() == 0 || date.getDay() == 6) { 
-				result.push('gantt_weekend');
-			}
-			//if (daysBetween(date, now) == 0) {
-			//	result.push('gantt_today');
-			//}
-			//if (date.getWeek() == today.getWeek()) {
-			//	return 'gantt_current_week';
-			//}
-			return result.join(' ');
-		};
-		gantt.templates.grid_row_class = function(start, end, task){
-			if (task.owner == true) {
-				return 'gantt_person_grid';
-			}
-		};
-		//gantt.templates.task_row_class = function(start, end, task){
-		//	return 'gantt_custom_row_2';
-		//};
-		gantt.templates.task_class = function(start, end, task){
-			if (task.owner == true) {
-				return 'gantt_person_task';
-			}
-		};
+		]
+                };
 
+                gantt.ext.zoom.init(zoomConfig);
+                gantt.ext.zoom.setLevel("month");
+                gantt.ext.zoom.attachEvent("onAfterZoom", function(level, config){
+                    document.querySelector(".gantt_radio[value='" +config.name+ "']").checked = true;
+                })
+                
+                
 		gantt.init('gantt_here'); 
 		gantt.parse({data:data});
 		$('.g4n77').remove();
-		//gantt.config.drag_progress = true; 
-
-		//gantt.oData.scrollLeft = ((new Date() - gantt.startDate) / (24*60*60000) - 10) * gantt.dayInPixels;
+		
 		gantt.showDate(yesterday);
+                
+                
 
+                var radios = document.getElementsByName("scale");
+                for (var i = 0; i < radios.length; i++) {
+		radios[i].onclick = function (event) {
+			gantt.ext.zoom.setLevel(event.target.value);
+		};
+                }
 
-		$('<button style="position:absolute;top:1ex;left:17ex">[NOW]</button>')
+		$('<button style="position:absolute;top:4ex;left:17ex">[NOW]</button>')
 			.click(function(){
 				gantt.showDate(yesterday);
 			})
 			.appendTo('div.g4n7t');
-                $('<button style="position:absolute;top:1ex;left:25ex">[PRINT]</button>')
+                $('<button style="position:absolute;top:4ex;left:25ex">[PRINT]</button>')
 			.click(function(){
                                 var originalContents = document.body.innerHTML;
                                 window.document.getElementById("page").style.visibility = "hidden";
@@ -476,35 +493,37 @@ gantt.config.columns = [
                                 document.innerHTML = originalContents;
                                 window.document.getElementById("page").style.visibility = "visible";
                                 window.document.getElementById("ghx-detail-view").style.visibility = "visible";
-                                //window.print();
 			})
 			.appendTo('div.g4n7t');
                         
                 var currFFZoom = 1;
                 var currIEZoom = 100;
-                $('<button style="position:absolute;top:1ex;left:7ex">[-]</button>')
+                $('<button style="position:absolute;top:4ex;left:7ex">[-]</button>')
 			.click(function(){
 				if (navigator.userAgent.search("Firefox")>-1){
-                                    var step = 0.02;
+                                    var step = 0.1;
                                     currFFZoom -= step;                 
-                                    $('html').css('MozTransform','scale(' + currFFZoom + ')');
-        
+                                    //$('html').css('-moz-transform','scale(' + currFFZoom + ')');
+                                    $('.gantt_container').css('-moz-transform-origin','left top');
+                                    $('.gantt_container').css('-moz-transform','scale(' + currFFZoom + ')');
                                 } else {
-                                    var step = 2;
+                                    var step = 5;
                                     currIEZoom -= step;
                                     $('html').css('zoom', ' ' + currIEZoom + '%');
                                 }
                                 $(window).trigger('resize');
 			})
 			.appendTo('div.g4n7t');
-                 $('<button style="position:absolute;top:1ex;left:12ex">[+]</button>')
+                 $('<button style="position:absolute;top:4ex;left:12ex">[+]</button>')
 			.click(function(){
 				if (navigator.userAgent.search("Firefox")>-1){
-                                    var step = 0.02;
+                                    var step = 0.1;
                                     currFFZoom += step; 
-                                    $('html').css('MozTransform','scale(' + currFFZoom + ')');
+                                    //$('html').css('-moz-transform','scale(' + currFFZoom + ')');
+                                    $('.gantt_container').css('-moz-transform-origin','left top');
+                                    $('.gantt_container').css('-moz-transform','scale(' + currFFZoom + ')');
                                 } else {
-                                    var step = 2;
+                                    var step = 5;
                                     currIEZoom += step;
                                     $('html').css('zoom', ' ' + currIEZoom + '%');
                                 }
@@ -512,7 +531,7 @@ gantt.config.columns = [
 			})
 			.appendTo('div.g4n7t');
                 
-		$('<button style="position:absolute;top:1ex;left:1ex">[X]</button>')
+		$('<button style="position:absolute;top:4ex;left:1ex">[X]</button>')
 			.click(function(){
 				cleanup("g4n7t");
                                 if (navigator.userAgent.search("Firefox")>-1){
@@ -524,6 +543,5 @@ gantt.config.columns = [
 			})
 			.appendTo('div.g4n7t');
 
-	});
-	//}, 3000);	
+	});	
 })();
