@@ -1,9 +1,27 @@
 <html>
-<head>
-  <title>jGantt</title>
-  <link rel="shortcut icon" href="RESOURCE_URL/jgantt/favicon.png"> 
-</head>
-<body>
-  <a href="javascript:BOOKMARKLET">jGantt</a>
-</body>
+  <head>
+    <title>Kanban Gantt (jGantt) - Bookmarlet installation</title>
+    <style>
+    .button {
+      background: #60a7d4;
+      background-image: linear-gradient(to bottom, #60a7d4, #4890bd);
+      border-radius: 28px;
+      text-shadow: 1px 1px 27px #666666;
+      font-family: Arial;
+      color: #ffffff;
+      font-size: 18px;
+      padding: 10px 20px 10px 20px;
+
+      width: 100px;
+      margin: 10px ;
+      text-decoration: none;
+    }
+    </style>
+  </head>
+  <body>
+    <b>Just Drag'n'Drop the button into your Bookmarks</b>
+    <div class="button">
+        <a href="javascript:(function(){ var script = document.createElement(&quot;script&quot;); script.src = &quot;https://mraddon.com/jgantt/bookmarklet.js&quot;; document.body.appendChild(script); document.body.removeChild(script);})();">Kanban Gantt</a>
+    </div>
+  </body>
 </html>
