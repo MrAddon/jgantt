@@ -22,7 +22,7 @@ https://www.youtube.com/watch?v=rbaDLdkNZqI
 
 ## Download (Jira 8.4 compatible)
 
-https://github.com/MrAddon/jgantt/raw/master/jira-jgantt-plugin/download_executable/jgantt-2.22.jar
+https://github.com/MrAddon/jgantt/raw/master/jira-jgantt-plugin/download_executable/jgantt-4.3.2.jar
 
 ## License
 
