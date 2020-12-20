@@ -50,15 +50,15 @@
             Zepto(function(a) {
                 a('<div style="position:absolute;top:50%;left:50%;margin-left:-36px;margin-top:-36px;z-index:20" class="g4n77 cssload-thecube"><div class="cssload-cube cssload-c1"></div><div class="cssload-cube cssload-c2"></div><div class="cssload-cube cssload-c4"></div><div class="cssload-cube cssload-c3"></div></div>').appendTo("body")
             });
-            e([{
-                js: AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/dhtmlxgantt.js"
-            }, {
-                css: AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/dhtmlxgantt.css"
-            }, {
-                css: AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/style.css"
-            }, {
-                js: AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/logic.js"
-            }], function() {
+            let resourcesToLoad = [
+                {js:  AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/dhtmlxgantt.js"},
+                {css: AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/dhtmlxgantt.css"},
+                {css: AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/style.css"},
+                {js:  AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/jira-rest-calls.js"},
+                {js:  AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/logic.js"},
+                {js:  AJS.contextPath() + "/download/resources/mraddon.hvqzao.jgantt:jgantt-static/data/gantt-api.js"},
+            ]
+            e(resourcesToLoad, function() {
                 c("g4nt7")
             })
         })

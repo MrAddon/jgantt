@@ -11,6 +11,7 @@
         <param name="atlassian-data-center-status">compatible</param>
         <param name="atlassian-licensing-enabled">false</param>
         <param name="plugin-type">both</param>
+        <param name="post.install.url">/rest/kanban-gantt-jira-server/latest/public/getting-started</param>
     </plugin-info>
 
     <!-- add our i18n resource -->
@@ -19,12 +20,19 @@
     <!-- add our web resources -->
     <web-resource key="jgantt-resources" name="jgantt Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        
+
+        <resource type="download" name="moment.min.js" location="/js/moment.min.js"/>
+        <resource type="download" name="momentlocales.min.js" location="/js/momentlocales.min.js"/>
+        <resource type="download" name="jdateformatparser.min.js" location="/js/jdateformatparser.min.js"/>
         <resource type="download" name="helper.js" location="/js/helper.js"/>
+        <resource type="download" name="dates.js" location="/js/dates.js"/>
 
         <context>gh-rapid</context>
-        <context>atl.general</context>
+        <context>gh-rapid-plan</context>
+        <context>gh-rapid-work</context>
+        <!--<context>atl.general</context>-->
     </web-resource>
+
     <web-resource key="jgantt-static" name="jgantt Static">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         
@@ -32,5 +40,9 @@
 
         <context>jgantt</context>
     </web-resource>
+
+    <rest key="rest" path="/kanban-gantt-jira-server" version="1.0">
+        <description>Rest services</description>
+    </rest>
     
 </atlassian-plugin>
